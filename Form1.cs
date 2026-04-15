@@ -254,6 +254,7 @@ namespace ComercialSF_APILinker
                             {
                                 try { Directory.CreateDirectory(_profile.unc_storage); } catch (Exception rex) { }
                                 try {
+                                    /*
 									switch (_profile.id_client)
 									{
 										case 16:
@@ -263,7 +264,10 @@ namespace ComercialSF_APILinker
 											Directory.CreateDirectory(_profile.unc_target);
 											break;
 									}
-                                } catch (Exception rex) { }
+                                    */
+									Directory.CreateDirectory(_profile.unc_target);
+								}
+								catch (Exception rex) { }
 
 								string[] folders = Directory.GetDirectories(_profile.unc_source, "*", System.IO.SearchOption.AllDirectories);
                                 foreach (string folder in folders)
@@ -271,6 +275,7 @@ namespace ComercialSF_APILinker
                                     string _new = folder.Replace(_profile.unc_source, _profile.unc_target);
                                     if (!String.IsNullOrEmpty(_profile.sufix_subdirs)) { _new += (" " + DateTime.Now.ToString(_profile.sufix_subdirs.ToString())); }
                                     try {
+                                        /*
 										switch (_profile.id_client)
 										{
 											case 16:
@@ -279,6 +284,7 @@ namespace ComercialSF_APILinker
 											default:
 												break;
 										}
+                                        */
 										Directory.CreateDirectory(_new); 
                                     } catch (Exception rex) { }
                                 }
@@ -332,13 +338,14 @@ namespace ComercialSF_APILinker
                                         }
 
 										string _target = _dir.Replace(_profile.unc_source, _profile.unc_target);
-
+                                        /*
 										switch (_profile.id_client)
 										{
 											case 16:
                                                 _target = _target.Replace("Sede\\", "Sede");
 												break;
 										}
+                                        */
 
 										if (!String.IsNullOrEmpty(_profile.sufix_subdirs)) { _target += (" " + DateTime.Now.ToString(_profile.sufix_subdirs.ToString())); }
                                         ListViewItem item = new ListViewItem(
