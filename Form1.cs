@@ -253,14 +253,34 @@ namespace ComercialSF_APILinker
                             if (Directory.Exists(_profile.unc_source))
                             {
                                 try { Directory.CreateDirectory(_profile.unc_storage); } catch (Exception rex) { }
+                                try {
+									switch (_profile.id_client)
+									{
+										case 16:
+											_profile.unc_target = _profile.unc_target + "\\Sede";
+											break;
+                                        default:
+											Directory.CreateDirectory(_profile.unc_target);
+											break;
+									}
+                                } catch (Exception rex) { }
 
-                                try { Directory.CreateDirectory(_profile.unc_target); } catch (Exception rex) { }
-                                string[] folders = Directory.GetDirectories(_profile.unc_source, "*", System.IO.SearchOption.AllDirectories);
+								string[] folders = Directory.GetDirectories(_profile.unc_source, "*", System.IO.SearchOption.AllDirectories);
                                 foreach (string folder in folders)
                                 {
                                     string _new = folder.Replace(_profile.unc_source, _profile.unc_target);
                                     if (!String.IsNullOrEmpty(_profile.sufix_subdirs)) { _new += (" " + DateTime.Now.ToString(_profile.sufix_subdirs.ToString())); }
-                                    try { Directory.CreateDirectory(_new); } catch (Exception rex) { }
+                                    try {
+										switch (_profile.id_client)
+										{
+											case 16:
+												_new = _new.Replace("Sede\\", "Sede");
+												break;
+											default:
+												break;
+										}
+										Directory.CreateDirectory(_new); 
+                                    } catch (Exception rex) { }
                                 }
                                 String[] _filters = new String[] { };
                                 if (_profile.pdf == 1)
@@ -275,8 +295,15 @@ namespace ComercialSF_APILinker
                                     Array.Resize<string>(ref _filters, _filters.Length + 1);
                                     _filters[_filters.Length - 1] = "tiff";
                                 }
+								if (_profile.jpeg == 1)
+								{
+									Array.Resize<string>(ref _filters, _filters.Length + 1);
+									_filters[_filters.Length - 1] = "jpg";
+									Array.Resize<string>(ref _filters, _filters.Length + 1);
+									_filters[_filters.Length - 1] = "jpeg";
+								}
 
-                                int _i = 0;
+								int _i = 0;
                                 int _limit = 50;
                                 string[] files = this.getFilesFrom(_profile.unc_source, _filters, true);
                                 foreach (string file in files)
@@ -298,9 +325,22 @@ namespace ComercialSF_APILinker
                                             case ".tiff":
                                                 _mime = "image/tiff";
                                                 break;
+											case ".jpg":
+											case ".jpeg":
+												_mime = "image/jpeg";
+												break;
                                         }
-                                        string _target = _dir.Replace(_profile.unc_source, _profile.unc_target);
-                                        if (!String.IsNullOrEmpty(_profile.sufix_subdirs)) { _target += (" " + DateTime.Now.ToString(_profile.sufix_subdirs.ToString())); }
+
+										string _target = _dir.Replace(_profile.unc_source, _profile.unc_target);
+
+										switch (_profile.id_client)
+										{
+											case 16:
+                                                _target = _target.Replace("Sede\\", "Sede");
+												break;
+										}
+
+										if (!String.IsNullOrEmpty(_profile.sufix_subdirs)) { _target += (" " + DateTime.Now.ToString(_profile.sufix_subdirs.ToString())); }
                                         ListViewItem item = new ListViewItem(
                                             new string[] {
                                             fileName,
@@ -353,7 +393,11 @@ namespace ComercialSF_APILinker
                     int _pages = 1;
                     switch (item.SubItems[4].Text)
                     {
-                        case ".tiff":
+						case ".jpeg":
+						case ".jpg":
+							_pages = 1;
+							break;
+						case ".tiff":
                         case ".tif":
                             Image img = Image.FromFile(fileSource);
                             Guid ID = img.FrameDimensionsList[0];

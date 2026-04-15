@@ -20,8 +20,9 @@ namespace ComercialSF_APILinker
         public string unc_target { get; set; }
         public int mm_alive { get; set; }
         public int pdf { get; set; }
-        public int tiff { get; set; }
-        public int single_page { get; set; }
+		public int tiff { get; set; }
+		public int jpeg { get; set; }
+		public int single_page { get; set; }
         public DateTime time_from { get; set; }
         public DateTime time_to { get; set; }
         public string sufix_subdirs { get; set; }
